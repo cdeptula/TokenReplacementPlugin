@@ -165,7 +165,7 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
   private FormData fdlOutputFileEncoding, fdOutputFileEncoding;
 
   private Label wlOutputSplitEvery;
-  private TextVar wOutputSplitEvery;
+  private Text wOutputSplitEvery;
   private FormData fdlOutputSplitEvery, fdOutputSplitEvery;
 
   private Label wlIncludeStepNrInFilename;
@@ -843,7 +843,7 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
     fdlOutputSplitEvery.top = new FormAttachment( wOutputFileEncoding, margin );
     wlOutputSplitEvery.setLayoutData( fdlOutputSplitEvery );
 
-    wOutputSplitEvery = new TextVar( transMeta, gOutputFile, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+    wOutputSplitEvery = new Text( gOutputFile, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
     props.setLook( wOutputSplitEvery );
     wOutputSplitEvery.addModifyListener( lsMod );
     fdOutputSplitEvery = new FormData();

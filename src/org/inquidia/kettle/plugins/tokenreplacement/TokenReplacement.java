@@ -123,7 +123,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
     {
       outputFilename = meta.buildFilename( meta.getOutputFileName(), getTransMeta(), getCopy(), getPartitionID(), data.splitnr );
     } else if ( meta.getOutputType().equalsIgnoreCase( "file" ) && meta.isOutputFileNameInField() ) {
-      String filenameValue = data.inputRowMeta.getString( r, meta.getOutputFileNameField(), "" );
+      String filenameValue = data.inputRowMeta.getString( r, environmentSubstitute( meta.getOutputFileNameField() ), "" );
       if( !Const.isEmpty( filenameValue ) )
       {
         outputFilename = filenameValue;
@@ -138,7 +138,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
     for( TokenReplacementField field : meta.getTokenReplacementFields() )
     {
       if( data.inputRowMeta.indexOfValue( field.getName() ) >= 0 ) {
-        String fieldValue = data.inputRowMeta.getString( r, field.getName(), null );
+        String fieldValue = environmentSubstitute( data.inputRowMeta.getString( r, field.getName(), null ) );
         if( fieldValue == null && !BooleanUtils.toBoolean( Const.getEnvironmentVariable( "KETTLE_EMPTY_STRING_DIFFERS_FROM_NULL", "N" ) ) )
         {
           fieldValue = Const.nullToEmpty( fieldValue );
@@ -154,8 +154,8 @@ public class TokenReplacement extends BaseStep implements StepInterface {
 
     if( meta.getInputType().equalsIgnoreCase( "text" ) )
     {
-      reader = new TokenReplacingReader( resolver, new StringReader( meta.getInputText() ),
-        meta.getTokenStartString(), meta.getTokenEndString() );
+      reader = new TokenReplacingReader( resolver, new StringReader( environmentSubstitute( meta.getInputText() ) ),
+        environmentSubstitute( meta.getTokenStartString() ), environmentSubstitute( meta.getTokenEndString() ) );
 
     } else if ( meta.getInputType().equalsIgnoreCase( "field" ) )
     {
@@ -163,7 +163,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
       {
         String inputString = data.inputRowMeta.getString( r, meta.getInputFieldName(), "" );
         reader = new TokenReplacingReader( resolver, new StringReader( inputString ),
-          meta.getTokenStartString(), meta.getTokenEndString() );
+          environmentSubstitute( meta.getTokenStartString() ), environmentSubstitute( meta.getTokenEndString() ) );
 
       } else {
         throw new KettleValueException( "Input field " + meta.getInputFieldName() + " not found on input stream." );
@@ -172,11 +172,11 @@ public class TokenReplacement extends BaseStep implements StepInterface {
     {
       if( meta.isInputFileNameInField() )
       {
-        if( data.inputRowMeta.indexOfValue( meta.getInputFileNameField() ) >= 0 )
+        if( data.inputRowMeta.indexOfValue( environmentSubstitute( meta.getInputFileNameField() ) ) >= 0 )
         {
-          inputFilename = data.inputRowMeta.getString( r, meta.getInputFileNameField(), "" );
+          inputFilename = data.inputRowMeta.getString( r, environmentSubstitute( meta.getInputFileNameField() ), "" );
         } else {
-          throw new KettleValueException( "Input filename field " + meta.getInputFileNameField()
+          throw new KettleValueException( "Input filename field " + environmentSubstitute( meta.getInputFileNameField() )
             + " not found on input stream." );
         }
       } else {
@@ -190,13 +190,14 @@ public class TokenReplacement extends BaseStep implements StepInterface {
 
       FileObject file = KettleVFS.getFileObject( inputFilename, getTransMeta() );
       reader = new TokenReplacingReader( resolver, new InputStreamReader( KettleVFS.getInputStream( inputFilename,
-        getTransMeta() ) ), meta.getTokenStartString(), meta.getTokenEndString() );
+        getTransMeta() ) ), environmentSubstitute( meta.getTokenStartString() ),
+        environmentSubstitute( meta.getTokenEndString() ) );
 
       if( meta.isAddInputFileNameToResult() )
       {
         ResultFile resultFile =
-          new ResultFile( ResultFile.FILE_TYPE_GENERAL, KettleVFS.getFileObject( inputFilename, getTransMeta() ), getTransMeta()
-            .getName(), getStepname() );
+          new ResultFile( ResultFile.FILE_TYPE_GENERAL, KettleVFS.getFileObject( inputFilename, getTransMeta() ),
+            getTransMeta().getName(), getStepname() );
         resultFile.setComment( BaseMessages.getString( PKG, "TokenReplacement.AddInputResultFile" ) );
         addResultFile( resultFile );
       }

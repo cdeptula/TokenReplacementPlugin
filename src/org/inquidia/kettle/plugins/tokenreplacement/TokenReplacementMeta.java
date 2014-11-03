@@ -769,7 +769,7 @@ public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterf
     // change the case insensitive flag too
 
     if ( outputType.equalsIgnoreCase( "field" ) ) {
-      ValueMetaInterface v = new ValueMeta( outputFieldName, ValueMetaInterface.TYPE_STRING );
+      ValueMetaInterface v = new ValueMeta( space.environmentSubstitute( outputFieldName ), ValueMetaInterface.TYPE_STRING );
       v.setOrigin( name );
       row.addValueMeta( v );
     }
