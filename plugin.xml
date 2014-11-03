@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="TokenReplacementPlugin"
+   iconfile="token.png"
+   description="Token Replacement"
+   tooltip="This step replaces tokens in a string or a file"
+   category="Transform"
+   classname="org.inquidia.kettle.plugins.tokenreplacement.TokenReplacementMeta">
+   <libraries>
+    <library name="TokenReplacementPlugin.jar"/>
+   </libraries>
+    
+   <localized_category>
+     <category locale="en_US">Transform</category>
+   </localized_category>
+   <localized_description>
+     <description locale="en_US">Token Replacement</description>
+   </localized_description>
+   <localized_tooltip>
+     <tooltip locale="en_US">This step replaces tokens in a string or a file</tooltip>
+   </localized_tooltip>
+   
+</plugin>
