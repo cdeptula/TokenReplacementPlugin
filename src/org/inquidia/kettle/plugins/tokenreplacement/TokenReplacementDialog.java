@@ -1110,12 +1110,13 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
     colinf = new ColumnInfo[FieldsCols];
     colinf[0] =
       new ColumnInfo(
-        BaseMessages.getString( PKG, "TokenReplacementDialog.StreamColumn.Column" ),
-        ColumnInfo.COLUMN_TYPE_CCOMBO, new String[] { "" }, false );
-    colinf[1] =
-      new ColumnInfo(
         BaseMessages.getString( PKG, "TokenReplacementDialog.TokenColumn.Column" ),
         ColumnInfo.COLUMN_TYPE_TEXT, false );
+    colinf[1] =
+      new ColumnInfo(
+        BaseMessages.getString( PKG, "TokenReplacementDialog.StreamColumn.Column" ),
+        ColumnInfo.COLUMN_TYPE_CCOMBO, new String[] { "" }, false );
+
 
     wFields =
       new TableView(
@@ -1480,7 +1481,7 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
       String[] fieldNames = entries.toArray( new String[entries.size()] );
 
       Const.sortStrings( fieldNames );
-      colinf[0].setComboValues( fieldNames );
+      colinf[1].setComboValues( fieldNames );
 
 
   }
@@ -1526,10 +1527,10 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
 
       TableItem item = wFields.table.getItem( i );
       if ( field.getName() != null ) {
-        item.setText( 1, field.getName() );
+        item.setText( 2, field.getName() );
       }
       if( field.getTokenName() != null ) {
-    	item.setText( 2, field.getTokenName() );
+    	item.setText( 1, field.getTokenName() );
       }
     }
 
@@ -1585,8 +1586,8 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
       TokenReplacementField field = new TokenReplacementField();
 
       TableItem item = wFields.getNonEmpty( i );
-      field.setName( item.getText( 1 ) );
-      field.setTokenName( item.getText( 2 ) );
+      field.setName( item.getText( 2 ) );
+      field.setTokenName( item.getText( 1 ) );
       //CHECKSTYLE:Indentation:OFF
       tfoi.getTokenReplacementFields()[i] = field;
     }
@@ -1614,7 +1615,7 @@ public class TokenReplacementDialog extends BaseStepDialog implements StepDialog
             return true;
           }
         };
-        getFieldsFromPrevious( r, wFields, 1, new int[] { 1 }, new int[] { 2 }, listener );
+        getFieldsFromPrevious( r, wFields, 2, new int[] { 2 }, new int[] { 1 }, listener );
       }
     } catch ( KettleException ke ) {
       new ErrorDialog( shell, BaseMessages.getString( PKG, "System.Dialog.GetFieldsFailed.Title" ), BaseMessages
