@@ -154,7 +154,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
 
     if( meta.getInputType().equalsIgnoreCase( "text" ) )
     {
-      reader = new TokenReplacingReader( resolver, new StringReader( environmentSubstitute( meta.getInputText() ) ),
+      reader = new TokenReplacingReader( resolver, new StringReader( meta.getInputText() ),
         environmentSubstitute( meta.getTokenStartString() ), environmentSubstitute( meta.getTokenEndString() ) );
 
     } else if ( meta.getInputType().equalsIgnoreCase( "field" ) )
