@@ -268,13 +268,13 @@ public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterf
   }
 
   public String getOutputFileFormatString() {
-    if( outputFileFormat == "DOS" )
+    if( outputFileFormat.equals( "DOS" ) )
     {
       return "\r\n";
-    } else if ( outputFileFormat == "UNIX" )
+    } else if ( outputFileFormat.equals( "UNIX" ) )
     {
       return "\n";
-    } else if ( outputFileFormat == "CR" )
+    } else if ( outputFileFormat.equals( "CR" ) )
     {
       return "\r";
     } else {
@@ -467,7 +467,7 @@ public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterf
   }
 
   public String getXML() {
-    StringBuffer retval = new StringBuffer( 800 );
+    StringBuilder retval = new StringBuilder( 800 );
 
     retval.append( "    " + XMLHandler.addTagValue( INPUT_TYPE, inputType ) );
     retval.append( "    " + XMLHandler.addTagValue( INPUT_TEXT, inputText ) );
@@ -476,7 +476,6 @@ public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterf
     retval.append( "    " + XMLHandler.addTagValue( INPUT_FILENAME_IN_FIELD, inputFileNameInField ) );
     retval.append( "    " + XMLHandler.addTagValue( INPUT_FILENAME_FIELD, inputFileNameField ) );
     retval.append( "    " + XMLHandler.addTagValue( ADD_INPUT_FILENAME_TO_RESULT, addInputFileNameToResult ) );
-
     retval.append( "    " + XMLHandler.addTagValue( OUTPUT_TYPE, outputType) );
     retval.append( "    " + XMLHandler.addTagValue( OUTPUT_FIELD_NAME, outputFieldName ) );
     retval.append( "    " + XMLHandler.addTagValue( OUTPUT_FILENAME, outputFileName) );
@@ -704,10 +703,10 @@ public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterf
       boolean error_found = false;
 
       // Starting from selected fields in ...
-      for ( int i = 0; i < tokenReplacementFields.length; i++ ) {
-        int idx = prev.indexOfValue( tokenReplacementFields[i].getName() );
+      for ( TokenReplacementField tokenReplacementField : tokenReplacementFields ) {
+        int idx = prev.indexOfValue( tokenReplacementField.getName() );
         if ( idx < 0 ) {
-          error_message += "\t\t" + tokenReplacementFields[i].getName() + Const.CR;
+          error_message += "\t\t" + tokenReplacementField.getName() + Const.CR;
           error_found = true;
         }
       }

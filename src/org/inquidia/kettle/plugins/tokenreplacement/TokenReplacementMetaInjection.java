@@ -26,6 +26,8 @@ import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.trans.step.StepInjectionMetaEntry;
+import org.pentaho.di.trans.step.StepInjectionUtil;
+import org.pentaho.di.trans.step.StepMetaInjectionEntryInterface;
 import org.pentaho.di.trans.step.StepMetaInjectionInterface;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ import java.util.List;
  */
 public class TokenReplacementMetaInjection implements StepMetaInjectionInterface {
 
-  public enum Entry {
+  public enum Entry implements StepMetaInjectionEntryInterface {
 
     INPUT_TYPE( ValueMetaInterface.TYPE_STRING, "The input type (Text, Field, File)" ),
     INPUT_TEXT( ValueMetaInterface.TYPE_STRING, "The input text" ),
@@ -78,7 +80,7 @@ public class TokenReplacementMetaInjection implements StepMetaInjectionInterface
     private int valueType;
     private String description;
 
-    private Entry( int valueType, String description ) {
+    Entry( int valueType, String description ) {
       this.valueType = valueType;
       this.description = description;
     }
@@ -298,6 +300,51 @@ public class TokenReplacementMetaInjection implements StepMetaInjectionInterface
       }
       meta.setTokenReplacementFields( tff );
     }
+  }
+
+  public List<StepInjectionMetaEntry> extractStepMetadataEntries() {
+    List<StepInjectionMetaEntry> list = new ArrayList<StepInjectionMetaEntry>();
+
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_TYPE, meta.getInputType() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_TEXT, meta.getInputText() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_FIELD, meta.getInputFieldName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_FILENAME, meta.getInputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_FILENAME_IN_FIELD, meta.isInputFileNameInField() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.INPUT_FILENAME_FIELD, meta.getInputFileNameField() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.ADD_INPUT_FILENAME_TO_RESULT, meta.isAddInputFileNameToResult() ) );
+
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_TYPE, meta.getOutputType() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_FIELD, meta.getOutputFieldName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_FILENAME, meta.getOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_FILENAME_IN_FIELD, meta.isOutputFileNameInField() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_FILENAME_FIELD, meta.getOutputFileNameField() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.APPEND_OUTPUT_FILE, meta.isAppendOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.CREATE_PARENT_FOLDER, meta.isCreateParentFolder() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_FORMAT, meta.getOutputFileFormat() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_ENCODING, meta.getOutputFileEncoding() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_SPLIT_EVERY, meta.getSplitEvery() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_INCLUDE_STEPNR, meta.isIncludeStepNrInOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_INCLUDE_PARTNR, meta.isIncludePartNrInOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_INCLUDE_DATE, meta.isIncludeDateInOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_INCLUDE_TIME, meta.isIncludeTimeInOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_SPECIFY_DATE_FORMAT, meta.isSpecifyDateFormatOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.OUTPUT_DATE_FORMAT, meta.getDateFormatOutputFileName() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.ADD_OUTPUT_FILENAME_TO_RESULT, meta.isAddOutputFileNameToResult() ) );
+
+    list.add( StepInjectionUtil.getEntry( Entry.TOKEN_START_STRING, meta.getTokenStartString() ) );
+    list.add( StepInjectionUtil.getEntry( Entry.TOKEN_END_STRING, meta.getTokenEndString() ) );
+
+    StepInjectionMetaEntry fieldsEntry = StepInjectionUtil.getEntry( Entry.TOKEN_FIELDS );
+    list.add( fieldsEntry );
+    for( int i = 0; i < meta.getTokenReplacementFields().length; i ++ ) {
+      StepInjectionMetaEntry fieldEntry = StepInjectionUtil.getEntry( Entry.TOKEN_FIELD );
+      List<StepInjectionMetaEntry> details = fieldEntry.getDetails();
+      details.add( StepInjectionUtil.getEntry( Entry.TOKEN_FIELDNAME, meta.getTokenReplacementFields()[i].getName() ) );
+      details.add( StepInjectionUtil.getEntry( Entry.TOKEN_NAME, meta.getTokenReplacementFields()[i].getTokenName() ) );
+    }
+
+
+    return list;
   }
 
 

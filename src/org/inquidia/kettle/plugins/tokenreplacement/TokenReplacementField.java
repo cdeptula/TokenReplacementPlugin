@@ -47,22 +47,13 @@ public class TokenReplacementField implements Cloneable {
   public TokenReplacementField() {
   }
   
-  public int compare( Object obj ) {
-    TokenReplacementField field = (TokenReplacementField) obj;
-
-    return name.compareTo( field.getName() );
-  }
-
   public boolean equals( Object obj ) {
-    TokenReplacementField field = (TokenReplacementField) obj;
+    if( obj instanceof TokenReplacementField ) {
+      TokenReplacementField field = (TokenReplacementField) obj;
 
-    return name.equals( field.getName() ) && tokenName.equals( field.tokenName );
-  }
-
-  public boolean equalsIgnoreCase( Object obj ) {
-    TokenReplacementField field = (TokenReplacementField) obj;
-
-    return name.equalsIgnoreCase( field.getName() ) && tokenName.equalsIgnoreCase( field.tokenName );
+      return name.equals( field.getName() ) && tokenName.equals( field.tokenName );
+    }
+    return false;
   }
 
   public Object clone() {
@@ -83,7 +74,7 @@ public class TokenReplacementField implements Cloneable {
 
   /**
    * Set the stream field name.
-   * @param fieldname
+   * @param fieldname the name of the field
    */
   public void setName( String fieldname ) {
     this.name = fieldname;
@@ -100,7 +91,7 @@ public class TokenReplacementField implements Cloneable {
 
   /**
    * Set the name of the token
-   * @param tokenName
+   * @param tokenName the name of the token
    */
   public void setTokenName( String tokenName ) {
 	  this.tokenName = tokenName;

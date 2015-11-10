@@ -23,8 +23,7 @@
 package org.inquidia.kettle.plugins.tokenreplacement;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.vfs.FileObject;
-import org.codehaus.groovy.runtime.StringBufferWriter;
+import org.apache.commons.vfs2.FileObject;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.ResultFile;
 import org.pentaho.di.core.exception.KettleException;
@@ -46,6 +45,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -92,6 +92,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
         if( meta.getOutputFileName() != null )
         {
           String filename = meta.buildFilename( meta.getOutputFileName(), getTransMeta(), getCopy(), getPartitionID(), data.splitnr );
+
           openNewOutputFile( filename );
         } else {
           throw new KettleException( "Output file name cannot be null." );
@@ -187,8 +188,9 @@ public class TokenReplacement extends BaseStep implements StepInterface {
       {
         throw new KettleValueException( "Input filename cannot be empty" );
       }
-
-      FileObject file = KettleVFS.getFileObject( inputFilename, getTransMeta() );
+      if( ! KettleVFS.fileExists( inputFilename, getTransMeta() ) ) {
+        throw new KettleException( "Input file " + inputFilename + " does not exist." );
+      }
       reader = new TokenReplacingReader( resolver, new InputStreamReader( KettleVFS.getInputStream( inputFilename,
         getTransMeta() ) ), environmentSubstitute( meta.getTokenStartString() ),
         environmentSubstitute( meta.getTokenEndString() ) );
@@ -210,33 +212,31 @@ public class TokenReplacement extends BaseStep implements StepInterface {
 
     if( meta.getOutputType().equalsIgnoreCase( "field" ) )
     {
-      stringWriter = new StringBufferWriter( new StringBuffer( 5000 ) );
-    } else if ( meta.getOutputType().equalsIgnoreCase( "file" ) )
-    {
-
-      if( inputFilename.equals( outputFilename ) )
-      {
-        throw new KettleException( "Input and output filenames must not be the same " + inputFilename );
-      }
-
-      int fileIndex = data.openFiles.indexOf( outputFilename );
-      if( fileIndex < 0 )
-      {
-        openNewOutputFile( outputFilename );
-        fileIndex = data.openFiles.indexOf( outputFilename );
-      }
-
-      bufferedWriter = data.openBufferedWriters.get( fileIndex );
-
+      stringWriter = new StringWriter( 5000 );
     } else {
-      throw new KettleException( "Unsupported output type " + meta.getOutputType() );
+      if ( meta.getOutputType().equalsIgnoreCase( "file" ) ) {
+
+        if ( inputFilename.equals( outputFilename ) ) {
+          throw new KettleException( "Input and output filenames must not be the same " + inputFilename );
+        }
+
+        int fileIndex = data.openFiles.indexOf( outputFilename );
+        if ( fileIndex < 0 ) {
+          openNewOutputFile( outputFilename );
+          fileIndex = data.openFiles.indexOf( outputFilename );
+        }
+
+        bufferedWriter = data.openBufferedWriters.get( fileIndex );
+
+      } else {
+        throw new KettleException( "Unsupported output type " + meta.getOutputType() );
+      }
     }
 
     String output = "";
 
     try {
       char[] cbuf = new char[ 5000 ];
-      StringBuffer sb = new StringBuffer(  );
       int length = 0;
       while ( ( length = reader.read( cbuf ) ) > 0 )
       {
@@ -302,11 +302,8 @@ public class TokenReplacement extends BaseStep implements StepInterface {
     meta = (TokenReplacementMeta) smi;
     data = (TokenReplacementData) sdi;
 
-    if ( super.init( smi, sdi ) ) {
-      return true;
-    }
+    return super.init( smi, sdi );
 
-    return false;
   }
 
 
@@ -316,7 +313,7 @@ public class TokenReplacement extends BaseStep implements StepInterface {
 
     try {
       closeAllOutputFiles();
-    } catch( KettleException ex ) {}
+    } catch( KettleException ignored ) {}
 
 	  super.dispose( smi, sdi );
   }
