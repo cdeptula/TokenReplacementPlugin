@@ -79,7 +79,5 @@ Building from Source
 ---
 The Token Replacement Plugin is built using Ant.  Since I do not want to deal with the complexities of Ivy the following instructions must be followed before building this plugin.
 
-1. Edit the build.properties file.
-2. Set pentahoclasspath to the data-integration/lib directory on your machine.
-3. Set the pentahoswtclasspath to the data-integration/libswt directory on your machine.
-5. Run "ant dist" to build the plugin.
+1. Edit the build.properties file setting the Pentaho and Java version.
+5. Run "ant clean resolve dist" to build the plugin.
