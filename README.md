@@ -77,7 +77,7 @@ When replacing tokens in a file, this step reads the entire file.  It does not o
 
 Building from Source
 ---
-The Token Replacement Plugin is built using Ant.  Since I do not want to deal with the complexities of Ivy the following instructions must be followed before building this plugin.
+The Token Replacement Plugin is built using Ant.
 
 1. Edit the build.properties file setting the Pentaho and Java version.
 5. Run "ant clean resolve dist" to build the plugin.
