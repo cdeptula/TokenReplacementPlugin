@@ -1,8 +1,8 @@
 /*! ******************************************************************************
  *
- * Pentaho Data Integration
+ * Inquidia Consulting
  *
- * Copyright (C) 2002-2013 by Pentaho : http://www.pentaho.com
+ * Copyright (C) 2014-2017 by Inquidia Consulting : http://www.inquidia.com
  *
  *******************************************************************************
  *
@@ -25,6 +25,7 @@ package org.inquidia.kettle.plugins.tokenreplacement;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
+import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleStepException;
@@ -56,6 +57,12 @@ import java.util.List;
  * Created on 4-apr-2003
  *
  */
+@Step( id = "TokenReplacementPlugin", image = "token.svg", name = "Step.Name", description = "Step.Description",
+        categoryDescription = "Category.Description",
+        i18nPackageName = "org.inquidia.kettle.plugins.tokenreplacement",
+        documentationUrl = "https://github.com/cdeptula/tokenreplacementplugin",
+        casesUrl = "https://github.com/cdeptula/tokenreplacementplugin/issues",
+        isSeparateClassLoaderNeeded = false )
 public class TokenReplacementMeta extends BaseStepMeta implements StepMetaInterface {
   public static final String INPUT_TYPE = "input_type";
   public static final String INPUT_FIELD_NAME = "input_field_name";

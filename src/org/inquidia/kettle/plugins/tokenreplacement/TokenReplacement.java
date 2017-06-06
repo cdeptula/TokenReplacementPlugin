@@ -1,8 +1,8 @@
 /*! ******************************************************************************
  *
- * Pentaho Data Integration
+ * Inquidia Consulting
  *
- * Copyright (C) 2002-2013 by Pentaho : http://www.pentaho.com
+ * Copyright (C) 2014-2017 by Inquidia Consulting : http://www.inquidia.com
  *
  *******************************************************************************
  *
